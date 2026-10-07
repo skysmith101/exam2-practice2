@@ -7,7 +7,6 @@
 
     <title>Orders</title>
 
-    <!-- Bootstrap -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -20,7 +19,6 @@
 
         <h1>Orders</h1>
 
-        <!-- Empty table -->
         <table class="table table-striped">
 
             <thead>
@@ -33,7 +31,6 @@
                 </tr>
             </thead>
 
-            <!-- JavaScript will eventually put rows here -->
             <tbody id="orderTableBody">
             </tbody>
 
@@ -44,20 +41,41 @@
 
     <script>
 
-        // Get all orders from the provided backend
+        // GET ALL records from backend
         async function loadOrders() {
 
+            // CHANGE API route if needed
             const response = await fetch('/api/orders');
 
             const result = await response.json();
 
-            // For now just make sure the frontend
-            // successfully receives the data
-            console.log(result);
+            // API returns the records inside data
+            const orders = result.data;
+
+            // Find table body
+            const tableBody =
+                document.getElementById('orderTableBody');
+
+            // Clear table
+            tableBody.innerHTML = '';
+
+            // Add one row for every record
+            orders.forEach(order => {
+
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${order.orderID}</td>
+                        <td>${order.orderDesc}</td>
+                        <td>${order.quantity}</td>
+                        <td>${order.unitCost}</td>
+                        <td>${order.created}</td>
+                    </tr>
+                `;
+
+            });
+
         }
 
-
-        // Run when page loads
         loadOrders();
 
     </script>
