@@ -46,6 +46,7 @@
 
                 <input
                     type="number"
+                    step="1"
                     id="quantity"
                     class="form-control"
                     required
@@ -96,7 +97,7 @@
             </thead>
 
 
-            <!-- JavaScript puts rows here -->
+            <!-- Js puts rows here -->
             <tbody id="orderTableBody">
             </tbody>
 
@@ -119,24 +120,17 @@
 
             const result = await response.json();
 
-
-
             const orders = result.data;
-
 
             // Must match:
             // <tbody id="orderTableBody">
-            const tableBody =
-                document.getElementById('orderTableBody');
-
+            const tableBody = document.getElementById('orderTableBody');
 
             // clear old table rows
             tableBody.innerHTML = '';
 
-
             // loops
             orders.forEach(order => {
-
                 // field names
                 // if backend fields are different change of course
                 tableBody.innerHTML += `
@@ -152,9 +146,6 @@
             });
 
         }
-
-
-
       
         // POST / ADD NEW ORDER
         // ===============
@@ -167,74 +158,44 @@
 
                     // Stops form refreshing
                     event.preventDefault();
-
-
                     // Get values from inputs
                     // Idsz must match HTML input IDs
+                    const orderDesc = document.getElementById('orderDesc').value;
 
-                    const orderDesc =
-                        document
-                            .getElementById('orderDesc')
-                            .value;
+                    const quantity = document.getElementById('quantity').value;
 
-                    const quantity =
-                        document
-                            .getElementById('quantity')
-                            .value;
-
-                    const unitCost =
-                        document
-                            .getElementById('unitCost')
-                            .value;
-
+                    const unitCost = document.getElementById('unitCost').value;
 
                     // Send new order backend
-                    const response = await fetch(
-                        '/api/orders',
+                    const response = await fetch('/api/orders',
                         {
                             method: 'POST',
-
                             headers: {
                                 'Content-Type':
                                     'application/json'
                             },
-
                             // CHANGE property names
                             // to match backend fields
-                            body: JSON.stringify({
-                                orderDesc: orderDesc,
-                                quantity: quantity,
-                                unitCost: unitCost
-                            })
+                            body: JSON.stringify({orderDesc: orderDesc, quantity: quantity, unitCost: unitCost})
                         }
                     );
 
 
-                    const result =
-                        await response.json();
-
-
+                    const result = await response.json();
                     console.log(result);
 
 
                     // Clear form after submit
-                    document
-                        .getElementById('orderForm')
-                        .reset();
-
-
+                    document.getElementById('orderForm').reset();
                     // Reload table so new order appears
                     loadOrders();
 
                 }
             );
 
-
-
         
         // LOAD TABLE WHEN PAGE OPEN
         loadOrders();
-
 
     </script>
 
