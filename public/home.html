@@ -7,6 +7,7 @@
 
     <title>Orders</title>
 
+    <!-- Bootstrap -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -17,7 +18,70 @@
 
     <div class="container mt-4">
 
-        <h1>Orders</h1>
+        <h1>Order Management</h1>
+
+
+        <!-- ========================= -->
+        <!-- ADD ORDER FORM -->
+        <!-- ========================= -->
+
+        <h3 class="mt-4">Add Order</h3>
+
+        <form id="orderForm" class="mb-4">
+
+            <div class="mb-2">
+                <label>Description</label>
+
+                <input
+                    type="text"
+                    id="orderDesc"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+
+            <div class="mb-2">
+                <label>Quantity</label>
+
+                <input
+                    type="number"
+                    id="quantity"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+
+            <div class="mb-2">
+                <label>Unit Cost</label>
+
+                <input
+                    type="number"
+                    step="0.01"
+                    id="unitCost"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Add Order
+            </button>
+
+        </form>
+
+
+
+        <!-- ========================= -->
+        <!-- ORDER TABLE -->
+        <!-- ========================= -->
+
+        <h3>Orders</h3>
 
         <table class="table table-striped">
 
@@ -31,6 +95,8 @@
                 </tr>
             </thead>
 
+
+            <!-- JavaScript puts rows here -->
             <tbody id="orderTableBody">
             </tbody>
 
@@ -39,29 +105,44 @@
     </div>
 
 
+
     <script>
 
-        // GET ALL records from backend
+        // ==========================================
+        // GET ALL ORDERS
+        // ==========================================
+
         async function loadOrders() {
 
-            // CHANGE API route if needed
+            // CHANGE THIS if API route is different
             const response = await fetch('/api/orders');
 
             const result = await response.json();
 
-            // API returns the records inside data
+            // Backend returns:
+            // {
+            //     success: true,
+            //     data: [...]
+            // }
+
             const orders = result.data;
 
-            // Find table body
+
+            // Must match:
+            // <tbody id="orderTableBody">
             const tableBody =
                 document.getElementById('orderTableBody');
 
-            // Clear table
+
+            // Clear old table rows
             tableBody.innerHTML = '';
 
-            // Add one row for every record
+
+            // Loop through every order
             orders.forEach(order => {
 
+                // CHANGE THESE field names
+                // if backend fields are different
                 tableBody.innerHTML += `
                     <tr>
                         <td>${order.orderID}</td>
@@ -76,7 +157,90 @@
 
         }
 
+
+
+        // ==========================================
+        // POST / ADD NEW ORDER
+        // ==========================================
+
+        document
+            .getElementById('orderForm')
+            .addEventListener(
+                'submit',
+                async function(event) {
+
+                    // Stops normal form refresh
+                    event.preventDefault();
+
+
+                    // Get values from inputs
+                    // IDs must match HTML input IDs
+
+                    const orderDesc =
+                        document
+                            .getElementById('orderDesc')
+                            .value;
+
+                    const quantity =
+                        document
+                            .getElementById('quantity')
+                            .value;
+
+                    const unitCost =
+                        document
+                            .getElementById('unitCost')
+                            .value;
+
+
+                    // Send new order to backend
+                    const response = await fetch(
+                        '/api/orders',
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            // CHANGE property names
+                            // to match backend fields
+                            body: JSON.stringify({
+                                orderDesc: orderDesc,
+                                quantity: quantity,
+                                unitCost: unitCost
+                            })
+                        }
+                    );
+
+
+                    const result =
+                        await response.json();
+
+
+                    console.log(result);
+
+
+                    // Clear form after submit
+                    document
+                        .getElementById('orderForm')
+                        .reset();
+
+
+                    // Reload table so new order appears
+                    loadOrders();
+
+                }
+            );
+
+
+
+        // ==========================================
+        // LOAD TABLE WHEN PAGE OPENS
+        // ==========================================
+
         loadOrders();
+
 
     </script>
 
