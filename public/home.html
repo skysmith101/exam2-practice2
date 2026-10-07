@@ -21,9 +21,9 @@
         <h1>Order Management</h1>
 
 
-        <!-- ========================= -->
+        
         <!-- ADD ORDER FORM -->
-        <!-- ========================= -->
+        <!-- ========= -->
 
         <h3 class="mt-4">Add Order</h3>
 
@@ -77,9 +77,9 @@
 
 
 
-        <!-- ========================= -->
+        
         <!-- ORDER TABLE -->
-        <!-- ========================= -->
+        <!-- ===== -->
 
         <h3>Orders</h3>
 
@@ -108,22 +108,18 @@
 
     <script>
 
-        // ==========================================
+        
         // GET ALL ORDERS
-        // ==========================================
+        // =====
 
         async function loadOrders() {
 
-            // CHANGE THIS if API route is different
+            //change api if route different 
             const response = await fetch('/api/orders');
 
             const result = await response.json();
 
-            // Backend returns:
-            // {
-            //     success: true,
-            //     data: [...]
-            // }
+
 
             const orders = result.data;
 
@@ -134,15 +130,15 @@
                 document.getElementById('orderTableBody');
 
 
-            // Clear old table rows
+            // clear old table rows
             tableBody.innerHTML = '';
 
 
-            // Loop through every order
+            // loops
             orders.forEach(order => {
 
-                // CHANGE THESE field names
-                // if backend fields are different
+                // field names
+                // if backend fields are different change of course
                 tableBody.innerHTML += `
                     <tr>
                         <td>${order.orderID}</td>
@@ -159,9 +155,9 @@
 
 
 
-        // ==========================================
+      
         // POST / ADD NEW ORDER
-        // ==========================================
+        // ===============
 
         document
             .getElementById('orderForm')
@@ -169,12 +165,12 @@
                 'submit',
                 async function(event) {
 
-                    // Stops normal form refresh
+                    // Stops form refreshing
                     event.preventDefault();
 
 
                     // Get values from inputs
-                    // IDs must match HTML input IDs
+                    // Idsz must match HTML input IDs
 
                     const orderDesc =
                         document
@@ -192,7 +188,7 @@
                             .value;
 
 
-                    // Send new order to backend
+                    // Send new order backend
                     const response = await fetch(
                         '/api/orders',
                         {
@@ -235,10 +231,8 @@
 
 
 
-        // ==========================================
-        // LOAD TABLE WHEN PAGE OPENS
-        // ==========================================
-
+        
+        // LOAD TABLE WHEN PAGE OPEN
         loadOrders();
 
 
